@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/elizabethh34/API-assignment1#readme",
   "devDependencies": {
-    "gulp": "^4.0.2"
+    "autoprefixer": "^10.1.0",
+    "cssnano": "^4.1.10",
+    "gulp": "^4.0.2",
+    "gulp-postcss": "^9.0.0",
+    "postcss": "^8.2.1"
   }
 }
