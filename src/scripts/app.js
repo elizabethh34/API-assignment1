@@ -10,6 +10,14 @@ const searchForStreets = (streetName) => {
   .catch(err => console.log(err));
 }
 
+const searchForStops = (streetKey) => {
+  return fetch(`https://api.winnipegtransit.com/v3/stops.json?api-key=Ift6y-RGolzmG6rkd1op&street=${streetKey}`)
+  .then(resp => {
+    return resp.json();
+  })
+  .catch(err => console.log(err));
+}
+
 const createStreetList = (street) => {
   streetListElem.insertAdjacentHTML('beforeend', `<a href="#" data-street-key="${street.key}">${street.name}</a>`);
 }
@@ -22,7 +30,6 @@ const clearStreetList = () => {
   streetListElem.innerHTML = '';
 }
   
-
 userFormElem.addEventListener('submit', event => {
   event.preventDefault();
 
@@ -36,5 +43,17 @@ userFormElem.addEventListener('submit', event => {
         createStreetList(street);
       })
     }
-  })    
+  })
+  .catch(err => console.log(err));   
+});
+
+streetListElem.addEventListener('click', event => {
+  if (event.target.nodeName === 'A') {
+    const clickedStreet = event.target;
+    searchForStops(clickedStreet.dataset.streetKey)
+    .then(resp => {
+      console.log(resp)
+    })
+    .catch(err => console.log(err));
+  }
 });
