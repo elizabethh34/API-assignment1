@@ -1,5 +1,6 @@
 const userFormElem = document.querySelector('form');
 const userInputElem = document.querySelector('input');
+const streetListElem = document.querySelector('.streets');
 
 const searchForStreets = (streetName) => {
   return fetch(`https://api.winnipegtransit.com/v3/streets.json?api-key=Ift6y-RGolzmG6rkd1op&name=${streetName}&usage=long`)
@@ -9,11 +10,28 @@ const searchForStreets = (streetName) => {
   .catch(err => console.log(err));
 }
 
-searchForStreets('kenaston')
-.then(resp => {
-  console.log(resp)
-})
+const createStreetList = (street) => {
+  console.log(street)
+  streetListElem.insertAdjacentHTML('beforeend', `<a href="#" data-street-key="${street.key}">${street.name}</a>`);
+}
+
+const createNoStreetMessage = () => {
+  streetListElem.insertAdjacentHTML('beforeend', '<div class="no-streets">No Streets Found</div>');
+}
+  
 
 userFormElem.addEventListener('submit', event => {
   event.preventDefault();
-})
+
+  searchForStreets(userInputElem.value)
+  .then(resp => {
+    if (resp.streets.length === 0) {
+      createNoStreetMessage();
+    } else {
+      resp.streets.forEach(street => {
+        createStreetList(street);
+      })
+    }
+  })
+    
+});
