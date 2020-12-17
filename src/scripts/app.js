@@ -18,6 +18,14 @@ const searchForStops = (streetKey) => {
   .catch(err => console.log(err));
 }
 
+const searchForSchedules = (stopNumber) => {
+  return fetch(`https://api.winnipegtransit.com/v3/stops/${stopNumber}/schedule.json?api-key=Ift6y-RGolzmG6rkd1op&usage=long&max-results-per-route=2`)
+  .then(resp => {
+    return resp.json();
+  })
+  .catch(err => console.log(err));
+}
+
 const createStreetList = (street) => {
   streetListElem.insertAdjacentHTML('beforeend', `<a href="#" data-street-key="${street.key}">${street.name}</a>`);
 }
@@ -52,8 +60,13 @@ streetListElem.addEventListener('click', event => {
     const clickedStreet = event.target;
     searchForStops(clickedStreet.dataset.streetKey)
     .then(resp => {
-      console.log(resp)
+      const stopScheduleArray = [];
+      for (const stop of resp.stops) {
+        stopScheduleArray.push(searchForSchedules(stop.key)); 
+      }
+      return Promise.all(stopScheduleArray);
     })
+    .then(data => console.log(data))
     .catch(err => console.log(err));
   }
 });
