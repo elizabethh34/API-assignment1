@@ -11,12 +11,15 @@ const searchForStreets = (streetName) => {
 }
 
 const createStreetList = (street) => {
-  console.log(street)
   streetListElem.insertAdjacentHTML('beforeend', `<a href="#" data-street-key="${street.key}">${street.name}</a>`);
 }
 
 const createNoStreetMessage = () => {
   streetListElem.insertAdjacentHTML('beforeend', '<div class="no-streets">No Streets Found</div>');
+}
+
+const clearStreetList = () => {
+  streetListElem.innerHTML = '';
 }
   
 
@@ -25,6 +28,7 @@ userFormElem.addEventListener('submit', event => {
 
   searchForStreets(userInputElem.value)
   .then(resp => {
+    clearStreetList();
     if (resp.streets.length === 0) {
       createNoStreetMessage();
     } else {
@@ -32,6 +36,5 @@ userFormElem.addEventListener('submit', event => {
         createStreetList(street);
       })
     }
-  })
-    
+  })    
 });
