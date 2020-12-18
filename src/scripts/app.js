@@ -40,6 +40,23 @@ const clearStreetList = () => {
   streetListElem.innerHTML = '';
 }
 
+const findTableInfo = (busOjectArray) => {
+  busOjectArray.forEach(busSchedule => {
+    busSchedule['stop-schedule']['route-schedules'].forEach(routeSchedule => {
+      routeSchedule['scheduled-stops'].forEach(stop => {
+        scheduleTableElem.insertAdjacentHTML('beforeend', 
+      `<tr>
+        <td>${busSchedule['stop-schedule'].stop.street.name}</td>
+        <td>${busSchedule['stop-schedule'].stop['cross-street'].name}</td>
+        <td>${busSchedule['stop-schedule'].stop.direction}</td>
+        <td>${routeSchedule.route.number}</td>
+        <td>${stop.times.arrival.scheduled}</td>
+      </tr>`);
+      })
+    })
+  })
+}
+
 userFormElem.addEventListener('submit', event => {
   event.preventDefault();
   if (userInputElem.value !== '') {
@@ -61,6 +78,7 @@ userFormElem.addEventListener('submit', event => {
 streetListElem.addEventListener('click', event => {
   if (event.target.nodeName === 'A') {
     const clickedStreet = event.target;
+    streetNameElem.textContent = `Displaying results for ${clickedStreet.textContent}`;
     searchForStops(clickedStreet.dataset.streetKey)
     .then(resp => {
       const stopScheduleArray = [];
@@ -69,9 +87,7 @@ streetListElem.addEventListener('click', event => {
       }
       return Promise.all(stopScheduleArray);
     })
-    .then(data => {
-      console.log(data)
-    })
+    .then(data => findTableInfo(data))
     .catch(err => console.log(err));
   }
 });
