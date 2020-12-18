@@ -40,6 +40,32 @@ const clearStreetList = () => {
   streetListElem.innerHTML = '';
 }
 
+const formatArrivalTime = (dateTimeString) => {
+  const date = new Date(dateTimeString);
+  let hour = date.getHours();
+  const minutes = date.getMinutes();
+  let addOn;
+  let zero;
+  
+  if (minutes <= 9) {
+    zero = 0;
+  } else if (minutes > 9) {
+    zero = '';
+  }
+
+  if (hour >= 12) {
+    addOn = 'PM';
+  } else if (hour < 12) {
+    addOn = 'AM';
+  }
+
+  if (hour > 12) {
+    hour = hour - 12;
+  }
+
+  return `${hour}:${zero}${minutes} ${addOn}`
+}
+
 const findTableInfo = (busOjectArray) => {
   busOjectArray.forEach(busSchedule => {
     busSchedule['stop-schedule']['route-schedules'].forEach(routeSchedule => {
@@ -50,7 +76,7 @@ const findTableInfo = (busOjectArray) => {
         <td>${busSchedule['stop-schedule'].stop['cross-street'].name}</td>
         <td>${busSchedule['stop-schedule'].stop.direction}</td>
         <td>${routeSchedule.route.number}</td>
-        <td>${stop.times.arrival.scheduled}</td>
+        <td>${formatArrivalTime(stop.times.arrival.scheduled)}</td>
       </tr>`);
       })
     })
