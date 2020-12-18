@@ -28,7 +28,7 @@ const searchForSchedules = (stopNumber) => {
   .catch(err => console.log(err));
 }
 
-const createStreetList = (street) => {
+const createStreetListElement = (street) => {
   streetListElem.insertAdjacentHTML('beforeend', `<a href="#" data-street-key="${street.key}">${street.name}</a>`);
 }
 
@@ -66,6 +66,25 @@ const formatTime = (dateTimeString) => {
   return `${hour}:${zero}${minutes} ${addOn}`
 }
 
+const getAllSchedules = (stopData) => {
+  const stopScheduleArray = [];
+  for (const stop of stopData.stops) {
+    stopScheduleArray.push(searchForSchedules(stop.number)); 
+  }
+  return Promise.all(stopScheduleArray);
+}
+
+const getWholeStreetList = (streetData) => {
+  clearStreetList();
+  if (streetData.streets.length === 0) {
+    createNoStreetMessage();
+  } else {
+    streetData.streets.forEach(street => {
+      createStreetListElement(street);
+    })
+  }
+}
+
 const renderBusList = (busOjectArray) => {
   busOjectArray.forEach(busSchedule => {
     busSchedule['stop-schedule']['route-schedules'].forEach(routeSchedule => {
@@ -91,16 +110,7 @@ userFormElem.addEventListener('submit', event => {
   event.preventDefault();
   if (userInputElem.value !== '') {
     searchForStreets(userInputElem.value)
-    .then(resp => {
-      clearStreetList();
-      if (resp.streets.length === 0) {
-        createNoStreetMessage();
-      } else {
-        resp.streets.forEach(street => {
-          createStreetList(street);
-        })
-      }
-    })
+    .then(resp => getWholeStreetList(resp))
     .catch(err => console.log(err));   
   } 
 });
@@ -110,13 +120,7 @@ streetListElem.addEventListener('click', event => {
     const clickedStreet = event.target;
     streetNameElem.textContent = `Displaying results for ${clickedStreet.textContent}`;
     searchForStops(clickedStreet.dataset.streetKey)
-    .then(resp => {
-      const stopScheduleArray = [];
-      for (const stop of resp.stops) {
-        stopScheduleArray.push(searchForSchedules(stop.number)); 
-      }
-      return Promise.all(stopScheduleArray);
-    })
+    .then(resp => getAllSchedules(resp))
     .then(data => {
       clearBusTimes();
       renderBusList(data)
