@@ -14,16 +14,16 @@ function htmlTask() {
 }
 
 function stylesTask() {
-  return src('src/css/*.css')
+  return src('src/styles/*.css')
     .pipe(sourcemaps.init())
     .pipe(postcss([autoprefixer(), cssnano()]))
     .pipe(sourcemaps.write())
     .pipe(concat('all.css'))
-    .pipe(dest('dist/css'))
+    .pipe(dest('dist/styles'))
 }
 
 function scriptsTask() {
-  return src('src/js/*.js')
+  return src('src/scripts/*.js')
     .pipe(sourcemaps.init())
     .pipe(babel({
       presets: ['@babel/env']
@@ -31,7 +31,7 @@ function scriptsTask() {
     .pipe(uglify())
     .pipe(sourcemaps.write())
     .pipe(concat('all.js'))
-    .pipe(dest('dist/js'))
+    .pipe(dest('dist/scripts'))
 }
 
 function imagestask() {
