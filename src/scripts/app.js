@@ -40,7 +40,7 @@ const clearStreetList = () => {
   streetListElem.innerHTML = '';
 }
 
-const formatArrivalTime = (dateTimeString) => {
+const formatTime = (dateTimeString) => {
   const date = new Date(dateTimeString);
   let hour = date.getHours();
   const minutes = date.getMinutes();
@@ -66,7 +66,7 @@ const formatArrivalTime = (dateTimeString) => {
   return `${hour}:${zero}${minutes} ${addOn}`
 }
 
-const findTableInfo = (busOjectArray) => {
+const renderBusList = (busOjectArray) => {
   busOjectArray.forEach(busSchedule => {
     busSchedule['stop-schedule']['route-schedules'].forEach(routeSchedule => {
       routeSchedule['scheduled-stops'].forEach(stop => {
@@ -76,12 +76,16 @@ const findTableInfo = (busOjectArray) => {
         <td>${busSchedule['stop-schedule'].stop['cross-street'].name}</td>
         <td>${busSchedule['stop-schedule'].stop.direction}</td>
         <td>${routeSchedule.route.number}</td>
-        <td>${formatArrivalTime(stop.times.arrival.scheduled)}</td>
+        <td>${formatTime(stop.times.departure.scheduled)}</td>
       </tr>`);
       })
     })
   })
 }
+
+const clearBusTimes = () => {
+  scheduleTableElem.innerHTML = '';
+} 
 
 userFormElem.addEventListener('submit', event => {
   event.preventDefault();
@@ -109,11 +113,14 @@ streetListElem.addEventListener('click', event => {
     .then(resp => {
       const stopScheduleArray = [];
       for (const stop of resp.stops) {
-        stopScheduleArray.push(searchForSchedules(stop.key)); 
+        stopScheduleArray.push(searchForSchedules(stop.number)); 
       }
       return Promise.all(stopScheduleArray);
     })
-    .then(data => findTableInfo(data))
+    .then(data => {
+      clearBusTimes();
+      renderBusList(data)
+    })
     .catch(err => console.log(err));
   }
 });
