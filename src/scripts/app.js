@@ -62,7 +62,6 @@ const formatTime = (dateTimeString) => {
   if (hour > 12) {
     hour = hour - 12;
   }
-
   return `${hour}:${zero}${minutes} ${addOn}`
 }
 
@@ -81,7 +80,7 @@ const getWholeStreetList = (streetData) => {
   } else {
     streetData.streets.forEach(street => {
       createStreetListElement(street);
-    })
+    });
   }
 }
 
