@@ -90,16 +90,16 @@ const renderBusList = (busOjectArray) => {
     busSchedule['stop-schedule']['route-schedules'].forEach(routeSchedule => {
       routeSchedule['scheduled-stops'].forEach(stop => {
         scheduleTableElem.insertAdjacentHTML('beforeend', 
-      `<tr>
-        <td>${busSchedule['stop-schedule'].stop.street.name}</td>
-        <td>${busSchedule['stop-schedule'].stop['cross-street'].name}</td>
-        <td>${busSchedule['stop-schedule'].stop.direction}</td>
-        <td>${routeSchedule.route.number}</td>
-        <td>${formatTime(stop.times.departure.scheduled)}</td>
-      </tr>`);
-      })
-    })
-  })
+        `<tr>
+          <td>${busSchedule['stop-schedule'].stop.street.name}</td>
+          <td>${busSchedule['stop-schedule'].stop['cross-street'].name}</td>
+          <td>${busSchedule['stop-schedule'].stop.direction}</td>
+          <td>${routeSchedule.route.number}</td>
+          <td>${formatTime(stop.times.departure.scheduled)}</td>
+        </tr>`);
+      });
+    });
+  });
 }
 
 const clearBusTimes = () => {
@@ -123,7 +123,7 @@ streetListElem.addEventListener('click', event => {
     .then(resp => getAllSchedules(resp))
     .then(data => {
       clearBusTimes();
-      renderBusList(data)
+      renderBusList(data);
     })
     .catch(err => console.log(err));
   }
