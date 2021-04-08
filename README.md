@@ -2,6 +2,8 @@
 
 This web app utilizes Winnipeg Transit's API to show users bus stop and schedule information.
 
+#### Hosted Site [https://winnipegtransit-bustimes-finder.netlify.app/](https://winnipegtransit-bustimes-finder.netlify.app/#)
+
 ## Features:
 
 - Users enter a search term into a input and search is done on pressing the enter key
